@@ -13,3 +13,4 @@ test
 local-*
 db/*.db
 prisma/db/*.db
+public/img/

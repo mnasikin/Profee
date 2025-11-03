@@ -18,6 +18,8 @@ export async function GET() {
       defaultGithub: config.defaultGithub,
       defaultLinkedin: config.defaultLinkedin,
       avatarUrl: config.avatarUrl,
+      defaultHighlights: config.defaultHighlights,
+      defaultQuote: config.defaultQuote,
       
       // UI
       theme: config.theme,

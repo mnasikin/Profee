@@ -10,7 +10,7 @@ Profee is a full-stack portfolio starter built with Next.js 15 (App Router), Typ
 - Contact form ready to send email notifications via SMTP
 - Server entry ready for WebSocket integrations and future realtime features
 
-## Why build on Profee?
+## Why Profee?
 - Easy to personalize: update fallback data and `.env` to make it yours
 - Flexible theming: toggle light/dark mode and colors via environment variables
 - Database ready: run `npm run db:push` and `npm run postbuild` to seed SQLite
@@ -35,6 +35,7 @@ cd profee
 npm install
 
 # set up the SQLite database
+npm run db:generate
 npm run db:push
 
 # (optional) seed with fallback content

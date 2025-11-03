@@ -50,7 +50,11 @@ export function getFallbackPersonalInfo(): FallbackPersonalInfo[] {
       id: 1,
       fullName: config.defaultName,
       title: config.portalDescription,
-      bio: `I'm a passionate full-stack developer with over 5 years of experience creating beautiful, functional web applications. I love turning complex problems into simple, elegant solutions that provide real value to users.`,
+      bio: `I'm a passionate and enthusiastic professional Customer Service with hands-on experience over 2 years in the IT.
+      Has a deep love for WordPress and all things related to website development and troubleshooting.
+      With a keen interest in managing and fixing website errors, especially those involving WordPress, Laravel, and CodeIgniter, I'm excels in ensuring smooth and efficient website performance.
+      My expertise in web hosting and domain management is complemented by my critical problem-solving skills. Known for thinking outside the box, I approaches challenges from various perspectives to find innovative solutions.
+      This unique approach not only resolves issues efficiently but also enhances the overall functionality of websites.`,
       location: config.defaultLocation,
       email: config.defaultEmail,
       phone: config.defaultPhone,
@@ -64,46 +68,36 @@ export function getFallbackExperience(): FallbackExperience[] {
   return [
     {
       id: 1,
-      jobTitle: 'Senior Full Stack Developer',
-      company: 'Tech Solutions Inc.',
-      startDate: '2022-01-01',
+      jobTitle: 'Customer Care',
+      company: 'CV. Jogjacamp',
+      startDate: '2022-10',
       endDate: null,
-      description: 'Leading development of enterprise web applications using modern technologies.',
+      description: 'Assist and guide customers of IDwebhost, Resellercamp, and Jogjacamp to ensure their services operate smoothly and without issues.',
       achievements: [
-        'Architected and implemented scalable microservices',
-        'Mentored junior developers and conducted code reviews',
-        'Improved application performance by 40%'
+        'Managed a high volume of customer inquiries with efficiency and professionalism through Live Chat and Whatsapp',
+        'Assist IDwebhost and Diskon.com customers to aid their issues related to websites, hosting, domains, email, and/or related issues',
+        'Assist Resellercamp customers in resolving issues and processing reseller account deposits.',
+        'Provided timely solutions to customer issues, enhancing overall satisfaction',
+        'Utilize knowledge of domain, hosting, website, and server management to assist customers effectively',
+        'Do Live Streaming in Tiktok and Instagram to reach and assist more customers for IDwebhost in real-time',
       ],
       isCurrent: true
     },
     {
       id: 2,
-      jobTitle: 'Full Stack Developer',
-      company: 'Digital Agency Co.',
-      startDate: '2020-06-01',
-      endDate: '2022-01-01',
-      description: 'Developed client websites and web applications with focus on user experience.',
+      jobTitle: 'Owner',
+      company: 'Store Dot2',
+      startDate: '2017-06',
+      endDate: '2022-01',
+      description: 'Own and manage the online store Store Dot2 to market digital products and in-game items.',
       achievements: [
-        'Built 20+ responsive websites for various clients',
-        'Integrated third-party APIs and payment systems',
-        'Collaborated with designers to implement pixel-perfect UIs'
+        'Manage sales across various platforms such as Itemku, Bitskins, PlayerAuction, G2G, Instagram, and other online platforms.',
+        'Ensure product inventory is always well-maintained and available.',
+        'Run advertising campaigns on marketplaces to increase product exposure.',
+        'Process customer orders and provide after-sales service.',
       ],
       isCurrent: false
     },
-    {
-      id: 3,
-      jobTitle: 'Junior Web Developer',
-      company: 'StartUp Hub',
-      startDate: '2019-03-01',
-      endDate: '2020-06-01',
-      description: 'Started my professional journey building web applications for startups.',
-      achievements: [
-        'Developed and maintained company website and internal tools',
-        'Learned modern development practices and frameworks',
-        'Participated in agile development processes'
-      ],
-      isCurrent: false
-    }
   ]
 }
 
@@ -112,8 +106,8 @@ export function getFallbackProjects(): FallbackProject[] {
     {
       id: 1,
       title: 'WPGan.com',
-      description: 'Nulla ut magna nec purus sodales tincidunt sit amet a ante. Cras at turpis condimentum, luctus erat at, dapibus orci. Nullam non viverra ligula, at placerat ante. Quisque sollicitudin leo cursus blandit elementum. Morbi vel luctus dolor. Sed semper leo nec justo ornare, sit amet euismod velit laoreet.',
-      technologies: ['WordPress'],
+      description: 'WPGan.com is one of my blog to share about my experiences when facing error or a cheat when developing or troubleshooting websites and servers (VPS) especially when using WordPress, cPanel, and Linux server.',
+      technologies: ['WordPress', 'CloudFlare',],
       projectUrl: 'https://wpgan.com',
       githubUrl: '',
       imageUrl: '/img/showcase/wpgan.webp',
@@ -121,52 +115,72 @@ export function getFallbackProjects(): FallbackProject[] {
     },
     {
       id: 2,
-      title: 'Task Management App',
-      description: 'Real-time task management application with drag-and-drop functionality and team collaboration features.',
-      technologies: ['Vue.js', 'Express', 'PostgreSQL'],
-      projectUrl: 'https://example.com/taskmanager',
-      githubUrl: 'https://github.com/johndoe/taskmanager',
-      imageUrl: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=600&fit=crop',
+      title: 'PRIFITRA',
+      description: 'PRIFITRA is a web-based application that lets you migrate data across server, especially designed if your hosting doesn&apos;t support SSH.',
+      technologies: ['Javascript', 'CSS', 'Native PHP',],
+      projectUrl: 'https://github.com/mnasikin/prifitra',
+      githubUrl: 'https://github.com/mnasikin/prifitra',
+      imageUrl: '/img/showcase/prifitra.webp',
       featured: true
     },
     {
       id: 3,
-      title: 'Weather Dashboard',
-      description: 'Beautiful weather dashboard with location-based forecasts, interactive maps, and historical data.',
-      technologies: ['Next.js', 'Tailwind CSS', 'Weather API'],
-      projectUrl: 'https://example.com/weather',
-      githubUrl: 'https://github.com/johndoe/weather',
-      imageUrl: 'https://nasikin.web.id/img/img5.webp',
-      featured: false
+      title: 'BtW Importer',
+      description: 'A powerful yet simple migration tool (plugin), BtW Importer helps you seamlessly transfer posts, images, and formatting from Blogger (Blogspot) to WordPress. Whether you&apos;re a casual blogger or managing a large archive, this plugin handles the complex parts so you don&apos;t have to.',
+      technologies: ['PHP', 'Javascript', 'CSS'],
+      projectUrl: 'https://wordpress.org/plugins/btw-importer/',
+      githubUrl: 'https://github.com/mnasikin/btw-importer',
+      imageUrl: '/img/showcase/btw-importer.webp',
+      featured: true
     },
     {
       id: 4,
-      title: 'Social Media Analytics',
-      description: 'Analytics dashboard for social media metrics with real-time charts and customizable reports.',
-      technologies: ['React', 'D3.js', 'Python'],
-      projectUrl: 'https://example.com/analytics',
-      githubUrl: 'https://github.com/johndoe/analytics',
-      imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop',
-      featured: false
+      title: 'Profee',
+      description: 'A full-stack portfolio starter built with Next.js 15 (App Router), TypeScript, and Tailwind + shadcn/ui on the front-end, backed by Prisma and SQLite.',
+      technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'shadcn/ui', 'Prisma', 'SQLite'],
+      projectUrl: 'https://nasikin.web.id',
+      githubUrl: 'https://github.com/mnasikin/Profee',
+      imageUrl: '/img/showcase/profee.webp',
+      featured: true
     },
     {
       id: 5,
-      title: 'Recipe Finder',
-      description: 'Mobile-first recipe application with ingredient search, meal planning, and nutritional information.',
-      technologies: ['React Native', 'Firebase', 'Redux'],
-      projectUrl: 'https://example.com/recipe-finder',
-      githubUrl: 'https://github.com/johndoe/recipe-finder',
-      imageUrl: 'https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=800&h=600&fit=crop',
+      title: 'Ezha',
+      description: 'A simple and lightwight plugin designed to effortlessly integrate share buttons adorned with captivating Font Awesome icons into your single posts and pages.',
+      technologies: ['PHP', 'CSS', 'Javascript'],
+      projectUrl: 'https://wordpress.org/plugins/ezsha/',
+      githubUrl: 'https://github.com/mnasikin/Ezsha',
+      imageUrl: '/img/showcase/ezsha.webp',
       featured: false
     },
     {
       id: 6,
-      title: 'Fitness Tracker',
-      description: 'Comprehensive fitness tracking app with workout plans, progress monitoring, and social features.',
-      technologies: ['Flutter', 'Node.js', 'MongoDB'],
-      projectUrl: 'https://example.com/fitness-tracker',
-      githubUrl: 'https://github.com/johndoe/fitness-tracker',
-      imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop',
+      title: 'Propagasi Web',
+      description: 'A website based appliaction to check DNS propagation from many Indonesia public DNS server, Global DNS server, and WHOIS Check.',
+      technologies: ['Codeigniter', 'RDAP', 'WHOIS'],
+      projectUrl: 'https://propagasi.web.id/',
+      githubUrl: '',
+      imageUrl: '/img/showcase/propagasi.webp',
+      featured: false
+    },
+    {
+      id: 7,
+      title: 'PRIFITRA - Landing Page',
+      description: 'A landing page built with basic CSS and HTML for PRIFITRA application.',
+      technologies: ['CSS', 'HTML', 'Javascript'],
+      projectUrl: 'https://github.com/mnasikin/Prifitra-Landing-Page',
+      githubUrl: 'https://github.com/mnasikin/Prifitra-Landing-Page',
+      imageUrl: '/img/showcase/prifitra-lp.webp',
+      featured: false
+    },
+    {
+      id: 8,
+      title: 'Carimonitor',
+      description: 'Websites for checking specifications and comparing monitors available in the Indonesian market.',
+      technologies: ['Laravel', 'Tailwind CSS', ],
+      projectUrl: 'https://carimonitor.web.id',
+      githubUrl: '',
+      imageUrl: '/img/showcase/carimonitor.webp',
       featured: false
     }
   ]
@@ -174,36 +188,22 @@ export function getFallbackProjects(): FallbackProject[] {
 
 export function getFallbackSkills(): FallbackSkill[] {
   return [
-    { id: 1, name: 'React', category: 'Frontend Development', proficiencyLevel: 4, isTechnical: true },
-    { id: 2, name: 'Vue.js', category: 'Frontend Development', proficiencyLevel: 4, isTechnical: true },
-    { id: 3, name: 'Next.js', category: 'Frontend Development', proficiencyLevel: 4, isTechnical: true },
-    { id: 4, name: 'TypeScript', category: 'Frontend Development', proficiencyLevel: 4, isTechnical: true },
-    { id: 5, name: 'Tailwind CSS', category: 'Frontend Development', proficiencyLevel: 4, isTechnical: true },
-    { id: 6, name: 'HTML5', category: 'Frontend Development', proficiencyLevel: 5, isTechnical: true },
-    { id: 7, name: 'CSS3', category: 'Frontend Development', proficiencyLevel: 5, isTechnical: true },
-    { id: 8, name: 'JavaScript', category: 'Frontend Development', proficiencyLevel: 5, isTechnical: true },
-    { id: 9, name: 'Node.js', category: 'Backend Development', proficiencyLevel: 4, isTechnical: true },
-    { id: 10, name: 'Express', category: 'Backend Development', proficiencyLevel: 4, isTechnical: true },
-    { id: 11, name: 'Python', category: 'Backend Development', proficiencyLevel: 3, isTechnical: true },
-    { id: 12, name: 'Django', category: 'Backend Development', proficiencyLevel: 3, isTechnical: true },
-    { id: 13, name: 'REST APIs', category: 'Backend Development', proficiencyLevel: 4, isTechnical: true },
-    { id: 14, name: 'GraphQL', category: 'Backend Development', proficiencyLevel: 3, isTechnical: true },
-    { id: 15, name: 'MySQL', category: 'Database', proficiencyLevel: 3, isTechnical: true },
-    { id: 16, name: 'PostgreSQL', category: 'Database', proficiencyLevel: 3, isTechnical: true },
-    { id: 17, name: 'MongoDB', category: 'Database', proficiencyLevel: 3, isTechnical: true },
-    { id: 18, name: 'Redis', category: 'Database', proficiencyLevel: 2, isTechnical: true },
-    { id: 19, name: 'Git', category: 'Tools & Others', proficiencyLevel: 4, isTechnical: true },
-    { id: 20, name: 'Docker', category: 'Tools & Others', proficiencyLevel: 3, isTechnical: true },
-    { id: 21, name: 'AWS', category: 'Tools & Others', proficiencyLevel: 3, isTechnical: true },
-    { id: 22, name: 'Firebase', category: 'Tools & Others', proficiencyLevel: 3, isTechnical: true },
-    { id: 23, name: 'Figma', category: 'Tools & Others', proficiencyLevel: 3, isTechnical: true },
-    { id: 24, name: 'Problem Solving', category: 'Soft Skills', proficiencyLevel: 5, isTechnical: false },
-    { id: 25, name: 'Team Collaboration', category: 'Soft Skills', proficiencyLevel: 5, isTechnical: false },
-    { id: 26, name: 'Communication', category: 'Soft Skills', proficiencyLevel: 4, isTechnical: false },
-    { id: 27, name: 'Time Management', category: 'Soft Skills', proficiencyLevel: 4, isTechnical: false },
-    { id: 28, name: 'Adaptability', category: 'Soft Skills', proficiencyLevel: 5, isTechnical: false },
-    { id: 29, name: 'Critical Thinking', category: 'Soft Skills', proficiencyLevel: 4, isTechnical: false },
-    { id: 30, name: 'Leadership', category: 'Soft Skills', proficiencyLevel: 3, isTechnical: false }
+    { id: 1, name: 'WordPress Management', category: 'Experienced', proficiencyLevel: 5, isTechnical: true },
+    { id: 2, name: 'WordPress Troubleshooting', category: 'Experienced', proficiencyLevel: 5, isTechnical: true },
+    { id: 3, name: 'CloudFlare Management', category: 'Experienced', proficiencyLevel: 5, isTechnical: true },
+
+    { id: 5, name: 'Domain & Hosting', category: 'Advanced', proficiencyLevel: 4, isTechnical: true },
+    { id: 6, name: 'Website Troubleshooting', category: 'Advanced', proficiencyLevel: 4, isTechnical: true },
+    { id: 7, name: 'On-Page SEO', category: 'Advanced', proficiencyLevel: 4, isTechnical: true },
+    { id: 8, name: 'WHM/cPanel', category: 'Advanced', proficiencyLevel: 4, isTechnical: true },
+
+    { id: 9, name: 'Linux Server', category: 'Intermediate', proficiencyLevel: 3, isTechnical: true },
+
+    { id: 10, name: 'Problem Solving', category: 'Soft Skills', proficiencyLevel: 2, isTechnical: false },
+    { id: 11, name: 'Team Collaboration', category: 'Soft Skills', proficiencyLevel: 2, isTechnical: false },
+    { id: 12, name: 'Communication', category: 'Soft Skills', proficiencyLevel: 2, isTechnical: false },
+    { id: 14, name: 'Adaptability', category: 'Soft Skills', proficiencyLevel: 2, isTechnical: false },
+    { id: 15, name: 'Critical Thinking', category: 'Soft Skills', proficiencyLevel: 2, isTechnical: false },
   ]
 }
 

@@ -49,3 +49,7 @@ prompt
 server.log
 db/*.db
 prisma/db/*.db
+
+# media assets
+public/img/
+package-lock.json

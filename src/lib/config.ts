@@ -11,6 +11,8 @@ export interface PortfolioConfig {
   defaultGithub: string
   defaultLinkedin: string
   avatarUrl: string
+  defaultHighlights: string
+  defaultQuote: string
   
   // UI
   theme: 'light' | 'dark'
@@ -50,6 +52,7 @@ export interface PortfolioConfig {
   devUrl: string
   stackoverflowUrl: string
   websiteUrl: string
+  ogImage: string
   
   // Analytics
   googleAnalyticsId: string
@@ -72,15 +75,19 @@ class ConfigManager {
 
     return {
       // Portfolio
-      portalTitle: process.env.PORTAL_TITLE || 'My Portfolio',
-      portalDescription: process.env.PORTAL_DESCRIPTION || 'Full Stack Developer',
-      defaultName: process.env.DEFAULT_NAME || 'John Doe',
-      defaultEmail: process.env.DEFAULT_EMAIL || 'john.doe@example.com',
-      defaultPhone: process.env.DEFAULT_PHONE || '+1 (555) 123-4567',
-      defaultLocation: process.env.DEFAULT_LOCATION || 'San Francisco, CA',
-      defaultGithub: process.env.DEFAULT_GITHUB || 'https://github.com/johndoe',
-      defaultLinkedin: process.env.DEFAULT_LINKEDIN || 'https://linkedin.com/in/johndoe',
+      portalTitle: process.env.PORTAL_TITLE || '',
+      portalDescription: process.env.PORTAL_DESCRIPTION || '',
+      defaultName: process.env.DEFAULT_NAME || '',
+      defaultEmail: process.env.DEFAULT_EMAIL || '',
+      defaultPhone: process.env.DEFAULT_PHONE || '',
+      defaultLocation: process.env.DEFAULT_LOCATION || '',
+      defaultGithub: process.env.DEFAULT_GITHUB || '',
+      defaultLinkedin: process.env.DEFAULT_LINKEDIN || '',
       avatarUrl: process.env.AVATAR_URL || '',
+      defaultHighlights: process.env.DEFAULT_HIGHLIGHTS || 'Problem Solver, Team Player, Continuous Learner',
+      defaultQuote:
+        process.env.DEFAULT_QUOTE ||
+        "When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or enjoying a good cup of coffee while reading about the latest developments in the tech world.",
       
       // UI
       theme,
@@ -105,21 +112,22 @@ class ConfigManager {
       siteKeywords: process.env.SITE_KEYWORDS || 'full stack developer, web development, portfolio, projects',
       
       // Social Media
-      githubUrl: process.env.GITHUB_URL || 'https://github.com/johndoe',
-      linkedinUrl: process.env.LINKEDIN_URL || 'https://linkedin.com/in/johndoe',
-      twitterUrl: process.env.TWITTER_URL || 'https://twitter.com/johndoe',
-      facebookUrl: process.env.FACEBOOK_URL || 'https://facebook.com/johndoe',
-      instagramUrl: process.env.INSTAGRAM_URL || 'https://instagram.com/johndoe',
-      threadsUrl: process.env.THREADS_URL || 'https://threads.net/johndoe',
-      youtubeUrl: process.env.YOUTUBE_URL || 'https://youtube.com/@johndoe',
-      tiktokUrl: process.env.TIKTOK_URL || 'https://tiktok.com/@johndoe',
-      dribbbleUrl: process.env.DRIBBBLE_URL || 'https://dribbble.com/johndoe',
-      behanceUrl: process.env.BEHANCE_URL || 'https://behance.net/johndoe',
-      codepenUrl: process.env.CODEPEN_URL || 'https://codepen.io/johndoe',
-      mediumUrl: process.env.MEDIUM_URL || 'https://medium.com/@johndoe',
-      devUrl: process.env.DEV_URL || 'https://dev.to/johndoe',
-      stackoverflowUrl: process.env.STACKOVERFLOW_URL || 'https://stackoverflow.com/users/123456/johndoe',
-      websiteUrl: process.env.WEBSITE_URL || 'https://johndoe.com',
+      githubUrl: process.env.GITHUB_URL || '',
+      linkedinUrl: process.env.LINKEDIN_URL || '',
+      twitterUrl: process.env.TWITTER_URL || '',
+      facebookUrl: process.env.FACEBOOK_URL || '',
+      instagramUrl: process.env.INSTAGRAM_URL || '',
+      threadsUrl: process.env.THREADS_URL || '',
+      youtubeUrl: process.env.YOUTUBE_URL || '',
+      tiktokUrl: process.env.TIKTOK_URL || '',
+      dribbbleUrl: process.env.DRIBBBLE_URL || '',
+      behanceUrl: process.env.BEHANCE_URL || '',
+      codepenUrl: process.env.CODEPEN_URL || '',
+      mediumUrl: process.env.MEDIUM_URL || '',
+      devUrl: process.env.DEV_URL || '',
+      stackoverflowUrl: process.env.STACKOVERFLOW_URL || '',
+      websiteUrl: process.env.WEBSITE_URL || '',
+      ogImage: process.env.OG_IMAGE || '',
       
       // Analytics
       googleAnalyticsId: process.env.GOOGLE_ANALYTICS_ID || '',

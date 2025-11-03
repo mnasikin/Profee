@@ -57,6 +57,8 @@ interface Config {
   defaultLinkedin: string
   githubUrl: string
   linkedinUrl: string
+  defaultHighlights: string
+  defaultQuote: string
   avatarUrl: string
   theme: 'light' | 'dark'
   primaryColor: string
@@ -90,12 +92,44 @@ type SocialButton = {
   icon: ComponentType<{ className?: string }>
   url: string
 }
+type CaptchaChallenge = {
+  a: number
+  b: number
+  symbol: '+' | '-' | 'x'
+  expected: number
+}
 const sanitizeUrl = (value?: string | null) => {
   if (!value) {
     return ''
   }
   const trimmed = value.trim()
   return trimmed.length > 0 ? trimmed : ''
+}
+const sanitizeText = (value?: string | null) => {
+  if (!value) {
+    return ''
+  }
+  const trimmed = value.trim()
+  return trimmed.length > 0 ? trimmed : ''
+}
+const generateCaptcha = (): CaptchaChallenge => {
+  while (true) {
+    const a = Math.floor(Math.random() * 10) + 1
+    const b = Math.floor(Math.random() * 10) + 1
+    const operations: Array<{
+      symbol: CaptchaChallenge['symbol']
+      compute: (x: number, y: number) => number
+    }> = [
+      { symbol: '+', compute: (x, y) => x + y },
+      { symbol: '-', compute: (x, y) => x - y },
+      { symbol: 'x', compute: (x, y) => x * y }
+    ]
+    const { symbol, compute } = operations[Math.floor(Math.random() * operations.length)]
+    const result = compute(a, b)
+    if (result >= 0 && result < 50) {
+      return { a, b, symbol, expected: result }
+    }
+  }
 }
 const safeImageSource = (value?: string, fallback?: string) => {
   if (value && value.trim().length > 0) {
@@ -122,14 +156,24 @@ export default function Portfolio() {
   const [contactForm, setContactForm] = useState({
     name: '',
     email: '',
-    message: ''
+    message: '',
+    captchaAnswer: ''
   })
+  const [captchaChallenge, setCaptchaChallenge] = useState<CaptchaChallenge>(() => generateCaptcha())
   const [contactSubmitting, setContactSubmitting] = useState(false)
   const [contactMessage, setContactMessage] = useState('')
   const avatarSrc = safeImageSource(config?.avatarUrl)
   const primaryColor = config?.primaryColor
   const backgroundColor = config?.backgroundColor
   const textColor = config?.textColor || '#1f2937'
+
+  const contactEmail =
+    sanitizeText(personalInfo?.email) || sanitizeText(config?.defaultEmail)
+  const contactPhone =
+    sanitizeText(personalInfo?.phone) || sanitizeText(config?.defaultPhone)
+  const contactLocation =
+    sanitizeText(personalInfo?.location) || sanitizeText(config?.defaultLocation)
+  const hasContactDetails = Boolean(contactEmail || contactPhone || contactLocation)
 
   const initials = useMemo(() => {
     if (personalInfo?.fullName) return getInitials(personalInfo.fullName)
@@ -231,6 +275,23 @@ export default function Portfolio() {
     ]
     return links.filter((link) => !!link.url)
   }, [personalInfo, config])
+
+  const highlightBadges = useMemo(() => {
+    const source = config?.defaultHighlights ?? ''
+    return source
+      .split(',')
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0)
+  }, [config?.defaultHighlights])
+
+const displayHighlights =
+  highlightBadges.length > 0
+    ? highlightBadges
+    : ['Problem Solver', 'Team Player', 'Continuous Learner']
+
+  const defaultQuoteFallback =
+    "When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or enjoying a good cup of coffee while reading about the latest developments in the tech world."
+  const aboutQuote = sanitizeText(config?.defaultQuote) || defaultQuoteFallback
   // Fetch all data on component mount
   useEffect(() => {
     const fetchData = async () => {
@@ -315,19 +376,32 @@ export default function Portfolio() {
   }, [config])
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setContactSubmitting(true)
     setContactMessage('')
+
+    const userAnswer = parseInt(contactForm.captchaAnswer, 10)
+    if (!captchaChallenge || Number.isNaN(userAnswer) || userAnswer !== captchaChallenge.expected) {
+      setContactMessage('Captcha answer is incorrect. Please try again.')
+      setCaptchaChallenge(generateCaptcha())
+      setContactForm((prev) => ({ ...prev, captchaAnswer: '' }))
+      return
+    }
+
+    setContactSubmitting(true)
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(contactForm),
+        body: JSON.stringify({
+          name: contactForm.name,
+          email: contactForm.email,
+          message: contactForm.message,
+        }),
       })
       if (response.ok) {
         setContactMessage('Message sent successfully!')
-        setContactForm({ name: '', email: '', message: '' })
+        setContactForm({ name: '', email: '', message: '', captchaAnswer: '' })
       } else {
         setContactMessage('Failed to send message. Please try again.')
       }
@@ -335,6 +409,8 @@ export default function Portfolio() {
       setContactMessage('An error occurred. Please try again.')
     } finally {
       setContactSubmitting(false)
+      setCaptchaChallenge(generateCaptcha())
+      setContactForm((prev) => ({ ...prev, captchaAnswer: '' }))
     }
   }
   const formatDate = (dateString: string) => {
@@ -343,7 +419,10 @@ export default function Portfolio() {
       month: 'long' 
     })
   }
-  const getSkillsByCategory = () => {
+  const skillsByCategory = useMemo(() => {
+    if (skills.length === 0) {
+      return [] as Array<[string, Skill[]]>
+    }
     const grouped = skills.reduce((acc, skill) => {
       if (!acc[skill.category]) {
         acc[skill.category] = []
@@ -351,8 +430,22 @@ export default function Portfolio() {
       acc[skill.category].push(skill)
       return acc
     }, {} as Record<string, Skill[]>)
-    return grouped
-  }
+    return Object.entries(grouped)
+      .map(([category, categorySkills]) => [
+        category,
+        [...categorySkills].sort(
+          (a, b) => b.proficiencyLevel - a.proficiencyLevel
+        ),
+      ] as [string, Skill[]])
+      .sort((a, b) => {
+        const topA = a[1][0]?.proficiencyLevel ?? -Infinity
+        const topB = b[1][0]?.proficiencyLevel ?? -Infinity
+        if (topA === topB) {
+          return a[0].localeCompare(b[0])
+        }
+        return topB - topA
+      })
+  }, [skills])
   const getSocialIcon = (url: string) => {
     if (url.includes('twitter.com') || url.includes('x.com')) return Twitter
     if (url.includes('facebook.com')) return Facebook
@@ -455,15 +548,15 @@ export default function Portfolio() {
                       "simple, elegant solutions that provide real value to users."
                     }
                   </p>
-                  <p className="text-muted-foreground leading-relaxed">
-                    When I'm not coding, you can find me exploring new technologies, contributing 
-                    to open-source projects, or enjoying a good cup of coffee while reading about 
-                    the latest developments in the tech world.
-                  </p>
+                  <blockquote className="text-muted-foreground leading-relaxed border-l-4 border-primary pl-4 italic">
+                    {aboutQuote}
+                  </blockquote>
                   <div className="flex gap-2 pt-4">
-                    <Badge variant="secondary">Problem Solver</Badge>
-                    <Badge variant="secondary">Team Player</Badge>
-                    <Badge variant="secondary">Continuous Learner</Badge>
+                    {displayHighlights.map((highlight) => (
+                      <Badge key={highlight} variant="secondary">
+                        {highlight}
+                      </Badge>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -502,9 +595,11 @@ export default function Portfolio() {
                   <h2 className="text-2xl font-bold mb-2">My Projects</h2>
                   <p className="text-muted-foreground">A collection of my recent work and personal projects</p>
                 </div>
-                <MasonryColumns columnWidth={320}>
+                <MasonryColumns columnWidth={320} children={undefined}>
                   {projects.map((project) => (
-                    <ProjectCard key={project.id} project={project} />
+                    <div key={project.id}>
+                      <ProjectCard project={project} />
+                    </div>
                   ))}
                 </MasonryColumns>
               </div>
@@ -512,11 +607,11 @@ export default function Portfolio() {
             {/* Skills Tab */}
             <TabsContent value="skills">
               <div className="space-y-6">
-                {Object.entries(getSkillsByCategory()).map(([category, categorySkills]) => (
+                {skillsByCategory.map(([category, categorySkills]) => (
                   <Card key={category}>
                     <CardHeader>
                       <CardTitle>{category}</CardTitle>
-                      <CardDescription>Technologies I work with</CardDescription>
+                      <CardDescription>I'm {category} in</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex flex-wrap gap-2">
@@ -538,36 +633,42 @@ export default function Portfolio() {
                     <CardDescription>I'd love to hear from you</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {(personalInfo || config) && (
+                    {hasContactDetails && (
                       <>
-                        <div className="flex items-center gap-3">
-                          <Mail className="w-5 h-5 text-muted-foreground" />
-                          <span>{personalInfo?.email || config?.defaultEmail}</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <Phone className="w-5 h-5 text-muted-foreground" />
-                          <span>{personalInfo?.phone || config?.defaultPhone}</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <MapPin className="w-5 h-5 text-muted-foreground" />
-                          <span>{personalInfo?.location || config?.defaultLocation}</span>
-                        </div>
-                        <div className="pt-4">
-                          <h4 className="font-medium mb-3">Connect with me</h4>
-                          {socialButtons.length > 0 && (
-                            <div className="flex gap-3 flex-wrap">
-                              {socialButtons.map(({ key, label, icon: Icon, url }) => (
-                                <Button key={key} variant="outline" size="sm" asChild>
-                                  <a href={url} target="_blank" rel="noopener noreferrer">
-                                    <Icon className="w-4 h-4 mr-2" />
-                                    {label}
-                                  </a>
-                                </Button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
+                        {contactEmail && (
+                          <div className="flex items-center gap-3">
+                            <Mail className="w-5 h-5 text-muted-foreground" />
+                            <span>{contactEmail}</span>
+                          </div>
+                        )}
+                        {contactPhone && (
+                          <div className="flex items-center gap-3">
+                            <Phone className="w-5 h-5 text-muted-foreground" />
+                            <span>{contactPhone}</span>
+                          </div>
+                        )}
+                        {contactLocation && (
+                          <div className="flex items-center gap-3">
+                            <MapPin className="w-5 h-5 text-muted-foreground" />
+                            <span>{contactLocation}</span>
+                          </div>
+                        )}
                       </>
+                    )}
+                    {socialButtons.length > 0 && (
+                      <div className={hasContactDetails ? "pt-4" : undefined}>
+                        <h4 className="font-medium mb-3">Connect with me</h4>
+                        <div className="flex gap-3 flex-wrap">
+                          {socialButtons.map(({ key, label, icon: Icon, url }) => (
+                            <Button key={key} variant="outline" size="sm" asChild>
+                              <a href={url} target="_blank" rel="noopener noreferrer">
+                                <Icon className="w-4 h-4 mr-2" />
+                                {label}
+                              </a>
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
                     )}
                   </CardContent>
                 </Card>
@@ -621,6 +722,44 @@ export default function Portfolio() {
                             required
                           />
                         </div>
+                        {captchaChallenge && (
+                          <div>
+                            <label htmlFor="captcha" className="block text-sm font-medium mb-1">
+                              Security Check: {`${captchaChallenge.a} ${captchaChallenge.symbol} ${captchaChallenge.b}`} = ?
+                            </label>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="number"
+                                id="captcha"
+                                value={contactForm.captchaAnswer}
+                                onChange={(e) =>
+                                  setContactForm((prev) => ({ ...prev, captchaAnswer: e.target.value }))
+                                }
+                                className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                                placeholder="Enter your answer"
+                                required
+                                min={0}
+                                max={50}
+                                disabled={contactSubmitting}
+                              />
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setCaptchaChallenge(generateCaptcha())
+                                  setContactForm((prev) => ({ ...prev, captchaAnswer: '' }))
+                                }}
+                                disabled={contactSubmitting}
+                              >
+                                New Question
+                              </Button>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Please solve the math question to verify you are human.
+                            </p>
+                          </div>
+                        )}
                         {contactMessage && (
                           <p className={`text-sm ${contactMessage.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
                             {contactMessage}
