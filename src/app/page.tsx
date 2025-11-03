@@ -551,7 +551,7 @@ const displayHighlights =
                   <blockquote className="text-muted-foreground leading-relaxed border-l-4 border-primary pl-4 italic">
                     {aboutQuote}
                   </blockquote>
-                  <div className="flex gap-2 pt-4">
+                  <div className="flex flex-wrap gap-2 pt-4">
                     {displayHighlights.map((highlight) => (
                       <Badge key={highlight} variant="secondary">
                         {highlight}
