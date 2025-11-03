@@ -1,5 +1,7 @@
 # Welcome to Profee
 
+[![Previwe](https://img.shields.io/badge/preview-000?style=for-the-badge&logo=download&logoColor=white)](https://nasikin.web.id)
+
 Profee is a full-stack portfolio starter built with Next.js 15 (App Router), TypeScript, and Tailwind + shadcn/ui on the front-end, backed by Prisma and SQLite. It comes with REST-style API routes, fallback seeding, optional SMTP email notifications, and easy theming through `.env`. Use it to publish experience, projects, and skills while keeping everything in sync between JSON fallback data and the database.
 
 ## What's included
