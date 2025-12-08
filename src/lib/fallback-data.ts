@@ -115,8 +115,18 @@ export function getFallbackProjects(): FallbackProject[] {
     },
     {
       id: 2,
+      title: 'Remindo App',
+      description: "Remindo App is a website based that integrated with Telegram to notify Domains and SSLs expiry date, so you don't need to check Domains and SSLs expiry manually.",
+      technologies: ['Next.js', 'React', 'Tailwind', 'Express.js', 'Node.js', 'MySQL', 'Telegram Bot API',],
+      projectUrl: 'https://remindo.app',
+      githubUrl: '',
+      imageUrl: '/img/showcase/remindo.webp',
+      featured: true
+    },
+    {
+      id: 3,
       title: 'PRIFITRA',
-      description: 'PRIFITRA is a web-based application that lets you migrate data across server, especially designed if your hosting doesn&apos;t support SSH.',
+      description: "PRIFITRA is a web-based application that lets you migrate data across server, especially designed if your hosting doesn't support SSH.",
       technologies: ['Javascript', 'CSS', 'Native PHP',],
       projectUrl: 'https://github.com/mnasikin/prifitra',
       githubUrl: 'https://github.com/mnasikin/prifitra',
@@ -124,9 +134,9 @@ export function getFallbackProjects(): FallbackProject[] {
       featured: true
     },
     {
-      id: 3,
+      id: 4,
       title: 'BtW Importer',
-      description: 'A powerful yet simple migration tool (plugin), BtW Importer helps you seamlessly transfer posts, images, and formatting from Blogger (Blogspot) to WordPress. Whether you&apos;re a casual blogger or managing a large archive, this plugin handles the complex parts so you don&apos;t have to.',
+      description: "A powerful yet simple migration tool (plugin), BtW Importer helps you seamlessly transfer posts, images, and formatting from Blogger (Blogspot) to WordPress. Whether you're a casual blogger or managing a large archive, this plugin handles the complex parts so you don't have to.",
       technologies: ['PHP', 'Javascript', 'CSS'],
       projectUrl: 'https://wordpress.org/plugins/btw-importer/',
       githubUrl: 'https://github.com/mnasikin/btw-importer',
@@ -134,7 +144,7 @@ export function getFallbackProjects(): FallbackProject[] {
       featured: true
     },
     {
-      id: 4,
+      id: 5,
       title: 'Profee',
       description: 'A full-stack portfolio starter built with Next.js 15 (App Router), TypeScript, and Tailwind + shadcn/ui on the front-end, backed by Prisma and SQLite.',
       technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'shadcn/ui', 'Prisma', 'SQLite'],
@@ -144,7 +154,7 @@ export function getFallbackProjects(): FallbackProject[] {
       featured: true
     },
     {
-      id: 5,
+      id: 6,
       title: 'Ezha',
       description: 'A simple and lightwight plugin designed to effortlessly integrate share buttons adorned with captivating Font Awesome icons into your single posts and pages.',
       technologies: ['PHP', 'CSS', 'Javascript'],
@@ -154,7 +164,7 @@ export function getFallbackProjects(): FallbackProject[] {
       featured: false
     },
     {
-      id: 6,
+      id: 7,
       title: 'Propagasi Web',
       description: 'A website based appliaction to check DNS propagation from many Indonesia public DNS server, Global DNS server, and WHOIS Check.',
       technologies: ['Codeigniter', 'RDAP', 'WHOIS'],
@@ -164,7 +174,7 @@ export function getFallbackProjects(): FallbackProject[] {
       featured: false
     },
     {
-      id: 7,
+      id: 8,
       title: 'PRIFITRA - Landing Page',
       description: 'A landing page built with basic CSS and HTML for PRIFITRA application.',
       technologies: ['CSS', 'HTML', 'Javascript'],
@@ -174,7 +184,7 @@ export function getFallbackProjects(): FallbackProject[] {
       featured: false
     },
     {
-      id: 8,
+      id: 9,
       title: 'Carimonitor',
       description: 'Websites for checking specifications and comparing monitors available in the Indonesian market.',
       technologies: ['Laravel', 'Tailwind CSS', ],
