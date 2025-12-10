@@ -588,22 +588,52 @@ const displayHighlights =
                 ))}
               </div>
             </TabsContent>
-            {/* Showcase Tab */}
             <TabsContent value="showcase">
-              <div className="space-y-6 max-w-7xl mx-auto">
-                <div className="text-center mb-8">
-                  <h2 className="text-2xl font-bold mb-2">My Projects</h2>
-                  <p className="text-muted-foreground">A collection of my recent work and personal projects</p>
+            <div className="space-y-6 max-w-7xl mx-auto">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold mb-2">My Projects</h2>
+                <p className="text-muted-foreground">A collection of my recent work and personal projects</p>
+              </div>              
+              {/* Featured Projects - no heading */}
+              {projects.some(p => p.featured) && (
+                <div className="mb-8">
+                  <MasonryColumns columnWidth={320} children={undefined}>
+                    {projects
+                      .filter(p => p.featured)
+                      .map((project) => (
+                        <div key={project.id}>
+                          <ProjectCard project={project} />
+                        </div>
+                      ))}
+                  </MasonryColumns>
                 </div>
+              )}              
+              {/* Divider with subtle text (optional) */}
+              {projects.some(p => p.featured) && projects.some(p => !p.featured) && (
+                <div className="relative my-8">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-border"></div>
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="bg-background px-4 text-xs text-muted-foreground">More Projects</span>
+                  </div>
+                </div>
+              )}
+              
+              {/* Other Projects */}
+              {projects.some(p => !p.featured) && (
                 <MasonryColumns columnWidth={320} children={undefined}>
-                  {projects.map((project) => (
-                    <div key={project.id}>
-                      <ProjectCard project={project} />
-                    </div>
-                  ))}
+                  {projects
+                    .filter(p => !p.featured)
+                    .map((project) => (
+                      <div key={project.id}>
+                        <ProjectCard project={project} />
+                      </div>
+                    ))}
                 </MasonryColumns>
-              </div>
-            </TabsContent>
+              )}
+            </div>
+          </TabsContent>
             {/* Skills Tab */}
             <TabsContent value="skills">
               <div className="space-y-6">

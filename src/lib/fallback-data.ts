@@ -167,8 +167,8 @@ export function getFallbackProjects(): FallbackProject[] {
       id: 7,
       title: 'Propagasi Web',
       description: 'A website based appliaction to check DNS propagation from many Indonesia public DNS server, Global DNS server, and WHOIS Check.',
-      technologies: ['Codeigniter', 'RDAP', 'WHOIS'],
-      projectUrl: 'https://propagasi.web.id/',
+      technologies: ['Next.js', 'TypeScript', 'SQLite with Prisma ORM', 'Tailwind CSS', 'Lucide Icons'],
+      projectUrl: 'https://propagasi.com/',
       githubUrl: '',
       imageUrl: '/img/showcase/propagasi.webp',
       featured: false
@@ -192,6 +192,16 @@ export function getFallbackProjects(): FallbackProject[] {
       githubUrl: '',
       imageUrl: '/img/showcase/carimonitor.webp',
       featured: false
+    },
+        {
+      id: 10,
+      title: 'Konfigurasi.ID',
+      description: 'All-in-one online tools for developer, content create, and for fun!',
+      technologies: ['Next.JS', 'Tailwind CSS', 'TypeScript', 'Prisma ORM', 'Font Awesome Icons'],
+      projectUrl: 'https://konfigurasi.id',
+      githubUrl: '',
+      imageUrl: '/img/showcase/konfigurasi.id.webp',
+      featured: true
     }
   ]
 }
