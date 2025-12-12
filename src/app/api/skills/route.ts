@@ -1,37 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getFallbackSkills } from '@/lib/fallback-data'
+import { getDataWithFallback, executeWriteOperation } from '@/lib/hybrid-db'
 
 // GET all skills
 export async function GET() {
   try {
-    const skills = await prisma.skill.findMany({
-      orderBy: [{ category: 'asc' }, { name: 'asc' }]
-    })
-
-    if (skills.length > 0) {
-      return NextResponse.json(
-        skills.map(skill => ({
+    const result = await getDataWithFallback(
+      async () => {
+        const skills = await prisma.skill.findMany({
+          orderBy: [{ category: 'asc' }, { name: 'asc' }]
+        })
+        return skills.map(skill => ({
           id: skill.id,
           name: skill.name,
           category: skill.category,
           proficiencyLevel: skill.proficiencyLevel,
           isTechnical: skill.isTechnical
         }))
-      )
-    }
+      },
+      () => getFallbackSkills().map(skill => ({
+        id: skill.id,
+        name: skill.name,
+        category: skill.category,
+        proficiencyLevel: skill.proficiencyLevel,
+        isTechnical: skill.isTechnical
+      }))
+    )
 
-    const fallback = getFallbackSkills().map(skill => ({
-      id: skill.id,
-      name: skill.name,
-      category: skill.category,
-      proficiencyLevel: skill.proficiencyLevel,
-      isTechnical: skill.isTechnical
-    }))
-
-    return NextResponse.json(fallback)
+    return NextResponse.json(result.data)
   } catch (error) {
-    console.error('Error fetching skills:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching skills:', error)
+    }
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -42,18 +43,26 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { name, category, proficiencyLevel, isTechnical } = body
 
-    const skill = await prisma.skill.create({
-      data: {
-        name,
-        category,
-        proficiencyLevel,
-        isTechnical
-      }
+    const result = await executeWriteOperation(async () => {
+      return await prisma.skill.create({
+        data: {
+          name,
+          category,
+          proficiencyLevel,
+          isTechnical
+        }
+      })
     })
 
-    return NextResponse.json({ success: true, id: skill.id })
+    if (!result.success) {
+      return NextResponse.json({ error: result.error }, { status: 503 })
+    }
+
+    return NextResponse.json({ success: true, id: result.data?.id })
   } catch (error) {
-    console.error('Error creating skill:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error creating skill:', error)
+    }
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

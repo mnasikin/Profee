@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getFallbackProjects } from '@/lib/fallback-data'
+import { getDataWithFallback, executeWriteOperation } from '@/lib/hybrid-db'
 
 function normalizeTechnologies(value: unknown): string[] {
   if (!value) {
@@ -35,13 +36,12 @@ function normalizeTechnologies(value: unknown): string[] {
 // GET all projects
 export async function GET() {
   try {
-    const projects = await prisma.project.findMany({
-      orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }]
-    })
-
-    if (projects.length > 0) {
-      return NextResponse.json(
-        projects.map(project => ({
+    const result = await getDataWithFallback(
+      async () => {
+        const projects = await prisma.project.findMany({
+          orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }]
+        })
+        return projects.map(project => ({
           id: project.id,
           title: project.title,
           description: project.description,
@@ -51,23 +51,24 @@ export async function GET() {
           imageUrl: project.imageUrl,
           featured: project.featured
         }))
-      )
-    }
+      },
+      () => getFallbackProjects().map(project => ({
+        id: project.id,
+        title: project.title,
+        description: project.description,
+        technologies: project.technologies,
+        projectUrl: project.projectUrl,
+        githubUrl: project.githubUrl,
+        imageUrl: project.imageUrl,
+        featured: project.featured
+      }))
+    )
 
-    const fallbackData = getFallbackProjects().map(project => ({
-      id: project.id,
-      title: project.title,
-      description: project.description,
-      technologies: project.technologies,
-      projectUrl: project.projectUrl,
-      githubUrl: project.githubUrl,
-      imageUrl: project.imageUrl,
-      featured: project.featured
-    }))
-
-    return NextResponse.json(fallbackData)
+    return NextResponse.json(result.data)
   } catch (error) {
-    console.error('Error fetching projects:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching projects:', error)
+    }
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -78,22 +79,29 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { title, description, technologies, projectUrl, githubUrl, imageUrl, featured } = body
 
-    const project = await prisma.project.create({
-      data: {
-        title,
-        description,
-        technologies: JSON.stringify(Array.isArray(technologies) ? technologies : []),
-        projectUrl,
-        githubUrl,
-        imageUrl,
-        featured: Boolean(featured)
-      }
+    const result = await executeWriteOperation(async () => {
+      return await prisma.project.create({
+        data: {
+          title,
+          description,
+          technologies: JSON.stringify(Array.isArray(technologies) ? technologies : []),
+          projectUrl,
+          githubUrl,
+          imageUrl,
+          featured: Boolean(featured)
+        }
+      })
     })
 
-    return NextResponse.json({ success: true, id: project.id })
+    if (!result.success) {
+      return NextResponse.json({ error: result.error }, { status: 503 })
+    }
+
+    return NextResponse.json({ success: true, id: result.data?.id })
   } catch (error) {
-    console.error('Error creating project:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error creating project:', error)
+    }
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
-

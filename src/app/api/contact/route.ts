@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getConfig } from '@/lib/config'
 import prisma from '@/lib/prisma'
 import nodemailer from 'nodemailer'
+import { getFallbackContactMessages } from '@/lib/fallback-data'
+import { getDataWithFallback, executeWriteOperation } from '@/lib/hybrid-db'
 
 const config = getConfig()
 
@@ -38,22 +40,28 @@ const escapeHtml = (unsafe: string) =>
 // GET all contact messages
 export async function GET() {
   try {
-    const messages = await prisma.contactMessage.findMany({
-      orderBy: { createdAt: 'desc' }
-    })
-
-    return NextResponse.json(
-      messages.map(message => ({
-        id: message.id,
-        name: message.name,
-        email: message.email,
-        message: message.message,
-        isRead: message.isRead,
-        createdAt: message.createdAt
-      }))
+    const result = await getDataWithFallback(
+      async () => {
+        const messages = await prisma.contactMessage.findMany({
+          orderBy: { createdAt: 'desc' }
+        })
+        return messages.map(message => ({
+          id: message.id,
+          name: message.name,
+          email: message.email,
+          message: message.message,
+          isRead: message.isRead,
+          createdAt: message.createdAt
+        }))
+      },
+      () => getFallbackContactMessages()
     )
+
+    return NextResponse.json(result.data)
   } catch (error) {
-    console.error('Error fetching contact messages:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching contact messages:', error)
+    }
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -68,13 +76,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const contactMessage = await prisma.contactMessage.create({
-      data: {
-        name,
-        email,
-        message
-      }
+    const result = await executeWriteOperation(async () => {
+      return await prisma.contactMessage.create({
+        data: {
+          name,
+          email,
+          message
+        }
+      })
     })
+
+    if (!result.success) {
+      return NextResponse.json({
+        error: result.error,
+        fallbackMode: true
+      }, { status: 503 })
+    }
 
     let emailSent = false
 
@@ -105,17 +122,21 @@ export async function POST(request: NextRequest) {
           emailSent = true
         }
       } catch (emailError) {
-        console.error('Error sending contact email:', emailError)
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error sending contact email:', emailError)
+        }
       }
     }
 
     return NextResponse.json({
       success: true,
-      id: contactMessage.id,
+      id: result.data?.id,
       emailSent
     })
   } catch (error) {
-    console.error('Error creating contact message:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error creating contact message:', error)
+    }
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

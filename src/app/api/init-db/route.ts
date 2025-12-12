@@ -11,7 +11,9 @@ export async function GET() {
       fallbackMode: false
     })
   } catch (error) {
-    console.error('Database initialization error:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Database initialization error:', error)
+    }
     return NextResponse.json({ error: 'Failed to initialize database' }, { status: 500 })
   }
 }

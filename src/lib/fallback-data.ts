@@ -102,7 +102,7 @@ export function getFallbackExperience(): FallbackExperience[] {
 }
 
 export function getFallbackProjects(): FallbackProject[] {
-  return [
+  const projects = [
     {
       id: 1,
       title: 'WPGan.com',
@@ -187,13 +187,13 @@ export function getFallbackProjects(): FallbackProject[] {
       id: 9,
       title: 'Carimonitor',
       description: 'Websites for checking specifications and comparing monitors available in the Indonesian market.',
-      technologies: ['Laravel', 'Tailwind CSS', ],
+      technologies: ['Laravel', 'Tailwind CSS',],
       projectUrl: 'https://carimonitor.web.id',
       githubUrl: '',
       imageUrl: '/img/showcase/carimonitor.webp',
       featured: false
     },
-        {
+    {
       id: 10,
       title: 'Konfigurasi.ID',
       description: 'All-in-one online tools for developer, content create, and for fun!',
@@ -202,8 +202,14 @@ export function getFallbackProjects(): FallbackProject[] {
       githubUrl: '',
       imageUrl: '/img/showcase/konfigurasi.id.webp',
       featured: true
-    }
+    },
   ]
+
+  // Sort: featured projects first, then by original order
+  return projects.sort((a, b) => {
+    if (a.featured === b.featured) return 0
+    return a.featured ? -1 : 1
+  })
 }
 
 export function getFallbackSkills(): FallbackSkill[] {

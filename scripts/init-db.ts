@@ -5,9 +5,13 @@ import { seedDatabaseFromFallback } from '@/lib/fallback-data'
 async function run() {
   try {
     await seedDatabaseFromFallback()
-    console.log('Database initialized and seeded from fallback data')
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Database initialized and seeded from fallback data')
+    }
   } catch (error) {
-    console.error('Failed to initialize database during build:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Failed to initialize database during build:', error)
+    }
     process.exitCode = 1
   } finally {
     await prisma.$disconnect()

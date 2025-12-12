@@ -5,7 +5,7 @@ import { getConfig } from '@/lib/config'
 export async function GET() {
   try {
     const config = getConfig()
-    
+
     // Return only safe configuration values (exclude sensitive data)
     const safeConfig = {
       // Portfolio
@@ -20,24 +20,24 @@ export async function GET() {
       avatarUrl: config.avatarUrl,
       defaultHighlights: config.defaultHighlights,
       defaultQuote: config.defaultQuote,
-      
+
       // UI
       theme: config.theme,
       primaryColor: config.primaryColor,
       backgroundColor: config.backgroundColor,
       textColor: config.textColor,
-      
+
       // Contact Form
       enableContactForm: config.enableContactForm,
       contactEmailRecipient: config.contactEmailRecipient,
       smtpConfigured: Boolean(config.smtpHost && config.smtpUser && config.smtpPassword),
-      
+
       // SEO
       siteTitle: config.siteTitle,
       siteDescription: config.siteDescription,
       siteUrl: config.siteUrl,
       siteKeywords: config.siteKeywords,
-      
+
       // Social Media
       githubUrl: config.githubUrl,
       linkedinUrl: config.linkedinUrl,
@@ -54,18 +54,20 @@ export async function GET() {
       devtoUrl: config.devUrl,
       stackoverflowUrl: config.stackoverflowUrl,
       websiteUrl: config.websiteUrl,
-      
+
       // Analytics (only in production or if explicitly enabled)
       googleAnalyticsId: config.googleAnalyticsId,
       googleTagManagerId: config.googleTagManagerId,
-      
+
       // Environment
       nodeEnv: config.nodeEnv
     }
 
     return NextResponse.json(safeConfig)
   } catch (error) {
-    console.error('Error fetching configuration:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching configuration:', error)
+    }
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
