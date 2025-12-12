@@ -1,18 +1,21 @@
 # Welcome to Profee
 
-[![Previwe](https://img.shields.io/badge/preview-000?style=for-the-badge&logo=download&logoColor=white)](https://nasikin.web.id)
+[![Preview](https://img.shields.io/badge/preview-000?style=for-the-badge&logo=download&logoColor=white)](https://nasikin.web.id)
 
-Profee is a full-stack portfolio starter built with Next.js 15 (App Router), TypeScript, and Tailwind + shadcn/ui on the front-end, backed by Prisma and SQLite. It comes with REST-style API routes, fallback seeding, optional SMTP email notifications, and easy theming through `.env`. Use it to publish experience, projects, and skills while keeping everything in sync between JSON fallback data and the database.
+Profee is a full-stack portfolio starter built with Next.js 15 (App Router), TypeScript, and Tailwind + shadcn/ui on the front-end, backed by Prisma and SQLite. It features a hybrid data system that automatically falls back to static data when the database is unavailable, making it perfect for quick deployments and development. Includes REST-style API routes, optional SMTP email notifications, and easy theming through `.env`.
 
 ## What's included
 - Next.js 15 (App Router) + TypeScript for a modern developer experience
 - Tailwind CSS + shadcn/ui components with environment-driven theming
+- Hybrid data system: automatic fallback to static data when database unavailable
 - Prisma ORM + SQLite storage seeded from `src/lib/fallback-data.ts`
 - REST APIs for personal info, experience, projects, skills, and contact
 - Contact form ready to send email notifications via SMTP
 - Server entry ready for WebSocket integrations and future realtime features
 
 ## Why Profee?
+- Zero setup required: works immediately with fallback data, no database needed
+- Production resilient: graceful degradation if database issues occur
 - Easy to personalize: update fallback data and `.env` to make it yours
 - Flexible theming: toggle light/dark mode and colors via environment variables
 - Database ready: run `npm run db:push` and `npm run postbuild` to seed SQLite
@@ -36,15 +39,13 @@ cd profee
 # install dependencies
 npm install
 
-# set up the SQLite database
+# run immediately with fallback data (no database needed!)
+npm run dev
+
+# OR set up SQLite database (optional)
 npm run db:generate
 npm run db:push
-
-# (optional) seed with fallback content
-npm run postbuild
-
-# run the dev server
-npm run dev
+npm run postbuild    # seed with fallback content
 
 # build for production
 npm run build
@@ -52,6 +53,23 @@ npm run build
 # start production server
 npm start
 ```
+
+## Hybrid data system
+Profee features an intelligent hybrid data system that automatically handles database unavailability:
+
+**How it works:**
+- If SQLite database is available → uses database (full CRUD operations)
+- If database is unavailable → automatically uses data from `src/lib/fallback-data.ts` (read-only)
+
+**Benefits:**
+- Instant start: Clone and run without database setup
+- Zero downtime: Website stays functional even if database fails
+- Developer friendly: No database required for initial development
+- Production ready: Graceful degradation in production environments
+
+**Logging:**
+- Development mode: Shows detailed logs and warnings
+- Production mode: Silent operation, no console output
 
 ## Customize fallback data
 The build step seeds SQLite using the fallback content in `src/lib/fallback-data.ts`. Update those arrays before `npm run build` so production matches your data. During development you can reseed any time:
@@ -98,6 +116,7 @@ src/
 - Theme switching ready to go
 
 ### Backend integration
+- Hybrid data system with automatic fallback to static data
 - Prisma ORM + SQLite database seeded from fallback JSON
 - REST APIs for personal info, experience, projects, skills, contact
 - Optional NextAuth.js integration (hooks ready)
@@ -111,8 +130,10 @@ src/
 - Utility hooks from ReactUse
 
 ## Next steps
-1. Clone the repo and update `.env` plus fallback data.
-2. Run `npm run db:push` and `npm run postbuild` to initialize the SQLite database.
-3. Start building with `npm run dev` and deploy when you’re ready.
+1. Clone the repo and run `npm install`
+2. Start immediately with `npm run dev` (uses fallback data)
+3. (Optional) Set up database with `npm run db:push && npm run postbuild`
+4. Customize `.env` and `src/lib/fallback-data.ts` to make it yours
+5. Deploy when you're ready!
 
 Built for developers who want to ship a polished portfolio fast.
