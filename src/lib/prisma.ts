@@ -10,7 +10,7 @@ const globalForPrisma = globalThis as unknown as {
 const dbPath = process.env.DATABASE_URL?.replace('file:', '') || ''
 const dbExists = dbPath ? fs.existsSync(path.resolve(dbPath)) : false
 
-if (!dbExists && process.env.NODE_ENV === 'development') {
+if (!dbExists && process.env.NODE_ENV === 'development' && process.env.IS_SERVERLESS !== 'true') {
   console.warn('⚠️  SQLite database file not found at:', dbPath)
   console.warn('📦 Application will run in fallback mode using data from fallback-data.ts')
 }

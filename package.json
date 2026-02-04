@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma db push && next build ",
-    "postbuild": "tsx scripts/init-db.ts",
+    "prebuild": "tsx scripts/prebuild.ts",
+    "build": "next build",
+    "postbuild": "tsx scripts/postbuild.ts",
     "start": "next start",
     "lint": "next lint",
     "db:push": "prisma db push",

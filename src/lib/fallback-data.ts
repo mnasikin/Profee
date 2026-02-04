@@ -1,5 +1,5 @@
 import { getConfig } from './config'
-import prisma from './prisma'
+
 
 export interface FallbackPersonalInfo {
   id: number
@@ -238,6 +238,7 @@ export function getFallbackContactMessages() {
 }
 
 export async function seedDatabaseFromFallback() {
+  const prisma = (await import('./prisma')).default
   const personalInfo = getFallbackPersonalInfo()
   const experiences = getFallbackExperience()
   const projects = getFallbackProjects()

@@ -1,5 +1,7 @@
 import { PrismaClientKnownRequestError, PrismaClientInitializationError } from '@prisma/client/runtime/library'
 
+const isServerless = process.env.IS_SERVERLESS === 'true'
+
 /**
  * Result type for hybrid data operations
  */
@@ -22,6 +24,16 @@ export async function getDataWithFallback<T>(
   fallbackData: () => T[],
   logErrors: boolean = true
 ): Promise<HybridDataResult<T>> {
+  if (isServerless) {
+    if (logErrors && process.env.NODE_ENV === 'development') {
+      console.log('☁️ IS_SERVERLESS is true, forcing fallback data')
+    }
+    return {
+      data: fallbackData(),
+      fallbackMode: true
+    }
+  }
+
   try {
     // Try to get data from database
     const data = await dbQuery()
@@ -73,6 +85,7 @@ export async function getDataWithFallback<T>(
  * @returns true if database is accessible, false otherwise
  */
 export async function isDatabaseAvailable(): Promise<boolean> {
+  if (isServerless) return false
   try {
     const prisma = await import('./prisma')
     await prisma.default.$queryRaw`SELECT 1`
@@ -90,6 +103,12 @@ export async function isDatabaseAvailable(): Promise<boolean> {
 export async function executeWriteOperation<T>(
   writeOperation: () => Promise<T>
 ): Promise<{ success: boolean; data?: T; error?: string }> {
+  if (isServerless) {
+    return {
+      success: false,
+      error: 'Write operations are disabled when IS_SERVERLESS is true.'
+    }
+  }
   try {
     const data = await writeOperation()
     return {

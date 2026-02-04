@@ -58,6 +58,19 @@ Profee features an intelligent hybrid data system that automatically handles dat
 **How it works:**
 - If SQLite database is available → uses database (full CRUD operations)
 - If database is unavailable → automatically uses data from `src/lib/fallback-data.ts` (read-only)
+- **Force Serverless Mode:** Set `IS_SERVERLESS=true` in your environment to skip all database operations and force fallback data.
+
+## Deployment
+
+### Standard Deployment
+1. Run `npm run build`
+2. Run `npm start`
+
+### Serverless Deployment (Vercel, etc.)
+Profee is optimized for serverless deployments where a persistent SQLite database may not be available:
+1. Set `IS_SERVERLESS=true` in your deployment environment variables.
+2. The build process will automatically skip database synchronization and seeding.
+3. The application will run entirely using the data in `src/lib/fallback-data.ts`.
 
 ## Contact form email notifications
 Configure SMTP in `.env` to send notifications when someone submits the contact form:
